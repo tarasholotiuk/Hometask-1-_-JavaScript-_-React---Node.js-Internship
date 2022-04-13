@@ -1,4 +1,34 @@
-import { arr, categoryList, inputState } from './arrays.js'
+import { arr, categoryList, obj, regex } from './data.js'
+
+class NewTaskObj {
+  constructor(name, category, content) {
+    this.name = name,
+      this.created = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      this.category = category,
+      this.content = content,
+      this.dates = this.content.match(regex) != null ? this.content.match(regex) : "",
+      this.isArchived = false,
+      this.iconTask = (function () {
+        let iconTask = ""
+        switch (category) {
+          case "Task":
+            iconTask = "shopping-cart.png"
+            break
+          case "Random Thought":
+            iconTask = "lateral.png"
+            break
+          case "Idea":
+            iconTask = "idea.png"
+            break
+          default:
+            iconTask = "shopping-cart.png"
+            break
+        }
+        return iconTask
+      }())
+  }
+  
+}
 
 export function showTasks() {
   let taskContainer = document.getElementById("tasks")
@@ -80,10 +110,8 @@ function createIcons(where = "") {
   }
 }
 
-
-export function showInputField( e, nameValue = "", categoryValue = "", contentValue = "",) {
-  console.log(inputState)
-  if (!inputState) {
+export function showInputField(e) {
+  if (!obj.inputState) {
     let item = document.createElement('div');
     item.id = 'input-form'
     item.innerHTML = '<input id="name-input" placeholder="Name"></input>'
@@ -102,27 +130,25 @@ export function showInputField( e, nameValue = "", categoryValue = "", contentVa
     }
     if (e.target.className == "icon-edit") {
       console.log("if")
-      who = e.target.className
+      obj.who = e.target.className
       let parent = e.target.parentNode.parentNode
-      let indexItem = arr.map(el => el = el.content)
+      obj.indexItem = arr.map(el => el = el.content)
         .indexOf(parent.getElementsByClassName("content")[0].childNodes[0].innerText)
-      nameValue = document.getElementById("name-input").value = arr[indexItem].name
-      categoryValue = document.getElementById("category-list").value = arr[indexItem].category
-      contentValue = document.getElementById("content-input").value = arr[indexItem].content
-    } else {
-      // who = "button-create-task"
-      console.log("else")
-      // who = e.target.id
+      obj.nameValue = document.getElementById("name-input").value = arr[obj.indexItem].name
+      obj.categoryValue = document.getElementById("category-list").value = arr[obj.indexItem].category
+      obj.contentValue = document.getElementById("content-input").value = arr[obj.indexItem].content
     }
+    // else {
+    // who = "button-create-task"
+    obj.who = e.target.className
+    // }
 
-    document.getElementById("name-input").addEventListener("input", e => nameValue = e.target.value)
-    document.getElementById("category-list").addEventListener("input", e => categoryValue = e.target.value)
-    document.getElementById("content-input").addEventListener("input", e => contentValue = e.target.value)
-    inputState = !inputState
-  console.log(inputState)
-
+    document.getElementById("name-input").addEventListener("input", e => obj.nameValue = e.target.value)
+    document.getElementById("category-list").addEventListener("input", e => obj.categoryValue = e.target.value)
+    document.getElementById("content-input").addEventListener("input", e => obj.contentValue = e.target.value)
+    obj.inputState = !obj.inputState
   } else {
-    writeData(arr, categoryList, inputState, who, nameValue, categoryValue, contentValue)
+    writeData(obj.inputState, obj.who, obj.nameValue, obj.categoryValue, obj.contentValue)
   }
 }
 
@@ -139,34 +165,32 @@ export function deleteAllTasks() {
 }
 
 
-// function writeData(arr, categoryList, inputState, who, nameValue, categoryValue, contentValue) {
-//   if (nameValue != "" && categoryValue != "" && contentValue != "") {
-//     console.log(who, nameValue, categoryValue, contentValue)
-//     switch (who) {
-//       case "button-create-task":
-//         arr.push(new NewTaskObj(nameValue, categoryValue, contentValue))
-//         break
-//       case "icon-edit":
-//         arr[indexItem].name = nameValue
-//         arr[indexItem].category = categoryValue
-//         arr[indexItem].content = contentValue
-//         if (contentValue.match(regex) !== null) {
-//           arr[indexItem].dates = contentValue.match(regex)
-//         }
-//         break
-//       default:
-//         return
-//     }
-//     // nameValue = ""
-//     // categoryValue = ""
-//     // contentValue = ""
-//     document.getElementById('input-form').parentNode.removeChild(document.getElementById("input-form"));
-//     showTasks(arr, categoryList, inputState, e)
-//     showInfo(arr, categoryList)
-//     inputState = !inputState
-//   }
-// }
-
+function writeData(inputState, who, nameValue, categoryValue, contentValue) {
+  if (nameValue != "" && categoryValue != "" && contentValue != "") {
+    console.log(who, nameValue, categoryValue, contentValue)
+    switch (who) {
+      case "button-create-task":
+        arr.push(new NewTaskObj(nameValue, categoryValue, contentValue))
+        break
+      case "icon-edit":
+        arr[obj.indexItem].name = nameValue
+        arr[obj.indexItem].category = categoryValue
+        arr[obj.indexItem].content = contentValue
+        if (contentValue.match(regex) !== null) {
+          arr[obj.indexItem].dates = contentValue.match(regex)
+        }
+        break
+      default:
+        return
+    }
+    obj.nameValue = "" 
+    obj.categoryValue = "" 
+    obj.contentValue = ""
+    document.getElementById('input-form').parentNode.removeChild(document.getElementById("input-form"));
+    showTasks()
+    obj.inputState = !inputState
+  }
+}
 
 function archiveTask(e) {
   let parent = e.target.parentNode.parentNode
