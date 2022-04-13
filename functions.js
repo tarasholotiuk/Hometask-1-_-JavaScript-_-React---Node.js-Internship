@@ -129,7 +129,6 @@ export function showInputField(e) {
         .insertAdjacentHTML('beforeend', '<option value="' + categoryList[i] + '">' + categoryList[i] + '</option>');
     }
     if (e.target.className == "icon-edit") {
-      console.log("if")
       obj.who = e.target.className
       let parent = e.target.parentNode.parentNode
       obj.indexItem = arr.map(el => el = el.content)
@@ -138,11 +137,7 @@ export function showInputField(e) {
       obj.categoryValue = document.getElementById("category-list").value = arr[obj.indexItem].category
       obj.contentValue = document.getElementById("content-input").value = arr[obj.indexItem].content
     }
-    // else {
-    // who = "button-create-task"
     obj.who = e.target.className
-    // }
-
     document.getElementById("name-input").addEventListener("input", e => obj.nameValue = e.target.value)
     document.getElementById("category-list").addEventListener("input", e => obj.categoryValue = e.target.value)
     document.getElementById("content-input").addEventListener("input", e => obj.contentValue = e.target.value)
@@ -164,31 +159,30 @@ export function deleteAllTasks() {
   showTasks()
 }
 
-
 function writeData(inputState, who, nameValue, categoryValue, contentValue) {
-  if (nameValue != "" && categoryValue != "" && contentValue != "") {
-    console.log(who, nameValue, categoryValue, contentValue)
-    switch (who) {
-      case "button-create-task":
-        arr.push(new NewTaskObj(nameValue, categoryValue, contentValue))
-        break
-      case "icon-edit":
-        arr[obj.indexItem].name = nameValue
-        arr[obj.indexItem].category = categoryValue
-        arr[obj.indexItem].content = contentValue
-        if (contentValue.match(regex) !== null) {
-          arr[obj.indexItem].dates = contentValue.match(regex)
-        }
-        break
-      default:
-        return
+  try {
+    if (nameValue != "" && categoryValue != "" && contentValue != "") {
+      switch (who) {
+        case "button-create-task":
+          arr.push(new NewTaskObj(nameValue, categoryValue, contentValue))
+          break
+        case "icon-edit":
+          arr[obj.indexItem].name = nameValue
+          arr[obj.indexItem].category = categoryValue
+          arr[obj.indexItem].content = contentValue
+          if (contentValue.match(regex) !== null) {
+            arr[obj.indexItem].dates = contentValue.match(regex)
+          }
+          break
+        default:
+          return
+      }
+      document.getElementById('input-form').parentNode.removeChild(document.getElementById("input-form"));
+      showTasks()
+      obj.inputState = !inputState
     }
-    obj.nameValue = "" 
-    obj.categoryValue = "" 
-    obj.contentValue = ""
-    document.getElementById('input-form').parentNode.removeChild(document.getElementById("input-form"));
-    showTasks()
-    obj.inputState = !inputState
+  } catch (error) {
+    console.log("Have a problem with write data\n", error)
   }
 }
 
