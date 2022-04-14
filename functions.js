@@ -27,7 +27,7 @@ class NewTaskObj {
         return iconTask
       }())
   }
-  
+
 }
 
 export function showTasks() {
@@ -86,27 +86,28 @@ function createTaskNode(name, created, category, content, dates, iconTask) {
 
 function createIcons(where = "") {
   if (where == "popup") {
-    let icon = document.getElementById("tasks-popup").getElementsByClassName("icon-task-blok")
-    for (var i = 0; i < icon.length; i++) {
+    let icon = [...document.getElementById("tasks-popup").getElementsByClassName("icon-task-blok")]
+    icon.map((el) => {
       let unarchive = '<img class="icon-unarchive" src="./icon/unarchive.png" alt="error">'
-      icon[i].insertAdjacentHTML("beforeend", unarchive)
-      icon[i].childNodes[0].addEventListener('click', (e) => unarchiveTask(e))
-    }
+      el.insertAdjacentHTML("beforeend", unarchive)
+      el.childNodes[0].addEventListener('click', (e) => unarchiveTask(e))
+    })
+
   } else {
-    let iconBlok = document.getElementsByClassName("icon-task-blok")
-    for (var i = 0; i < iconBlok.length; i++) {
+    let iconBlok = [...document.getElementsByClassName("icon-task-blok")]
+    iconBlok.map(el => {
       let edit = '<img class="icon-edit" src="./icon/edit2.png" alt="error">'
-      iconBlok[i].insertAdjacentHTML("beforeend", edit)
-      iconBlok[i].childNodes[0].addEventListener('click', (e) => showInputField(e))
+      el.insertAdjacentHTML("beforeend", edit)
+      el.childNodes[0].addEventListener('click', (e) => showInputField(e))
 
       let archive = '<img class="icon-archive" src="./icon/archive2.png" alt="error">'
-      iconBlok[i].insertAdjacentHTML("beforeend", archive)
-      iconBlok[i].childNodes[1].addEventListener('click', (e) => archiveTask(e))
+      el.insertAdjacentHTML("beforeend", archive)
+      el.childNodes[1].addEventListener('click', (e) => archiveTask(e))
 
       let del = '<img class="icon-delete" src="./icon/delete2.png" alt="error">'
-      iconBlok[i].insertAdjacentHTML("beforeend", del)
-      iconBlok[i].childNodes[2].addEventListener('click', (e) => deleteTask(e))
-    }
+      el.insertAdjacentHTML("beforeend", del)
+      el.childNodes[2].addEventListener('click', (e) => deleteTask(e))
+    })
   }
 }
 
@@ -124,15 +125,14 @@ export function showInputField(e) {
     document.getElementById("button-create-task").parentNode
       .insertBefore(item, document.getElementById("button-create-task"))
 
-    for (let i = 0; i < categoryList.length; i++) {
+    categoryList.map(category => {
       document.getElementById("category-list")
-        .insertAdjacentHTML('beforeend', '<option value="' + categoryList[i] + '">' + categoryList[i] + '</option>');
-    }
+        .insertAdjacentHTML('beforeend', '<option value="' + category + '">' + category + '</option>');
+    })
     if (e.target.className == "icon-edit") {
       obj.who = e.target.className
-      let parent = e.target.parentNode.parentNode
-      obj.indexItem = arr.map(el => el = el.content)
-        .indexOf(parent.getElementsByClassName("content")[0].childNodes[0].innerText)
+      let contentInHtml = e.target.parentNode.previousSibling.previousSibling.firstChild.innerText
+      obj.indexItem = arr.map(el =>el = el.content).indexOf(contentInHtml)
       obj.nameValue = document.getElementById("name-input").value = arr[obj.indexItem].name
       obj.categoryValue = document.getElementById("category-list").value = arr[obj.indexItem].category
       obj.contentValue = document.getElementById("content-input").value = arr[obj.indexItem].content
@@ -187,17 +187,15 @@ function writeData(inputState, who, nameValue, categoryValue, contentValue) {
 }
 
 function archiveTask(e) {
-  let parent = e.target.parentNode.parentNode
-  let indexItem = arr.map(el => el = el.content)
-    .indexOf(parent.getElementsByClassName("content")[0].childNodes[0].innerText)
+  let contentInHtml = e.target.parentNode.previousSibling.previousSibling.firstChild.innerText
+  let indexItem = arr.map(el => el = el.content).indexOf(contentInHtml)
   arr[indexItem].isArchived = true
   showTasks()
 }
 
 function unarchiveTask(e) {
-  let parent = e.target.parentNode.parentNode
-  let indexItem = arr.map(el => el = el.content)
-    .indexOf(parent.getElementsByClassName("content")[0].childNodes[0].innerText)
+  let contentInHtml = e.target.parentNode.previousSibling.previousSibling.firstChild.innerText
+  let indexItem = arr.map(el => el = el.content).indexOf(contentInHtml)
   arr[indexItem].isArchived = false
   showArhivedTasks("popup")
 }
