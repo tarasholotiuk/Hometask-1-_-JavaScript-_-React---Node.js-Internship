@@ -5,12 +5,86 @@
   <meta charset="UTF-8">
   <title>Document</title>
   <link rel="stylesheet" href="style.css">
-  <script type="text/javascript" src="app.js"></script>
+  <script type="module" src="./app.js"></script>
 </head>
 
 <body>
+  <div id="container">
+    <div class="header invert">
+      <div class="name-header">
+        <span>Name</span>
+      </div>
+      <div class="created">
+        <span>Created</span>
+      </div>
+      <div class="category">
+        <span>Category</span>
+      </div>
+      <div class="content">
+        <span>Content</span>
+      </div>
+      <div class="dates">
+        <span>Dates</span>
+      </div>
+      <div class="icon-header-blok">
+        <img id="icon-archive-header" class="icon-archive" src="./icon/archive.png" alt="error">
+        <img id="icon-delete-header" class="icon-delete" src="./icon/delete.png" alt="error">
+      </div>
+    </div>
 
-  
+    <div id="tasks">
+    </div>
+
+    <div>
+      <input type="button" class="button-create-task" id="button-create-task" value="Create Task"></input>
+    </div>
+
+    <div id="info-header" class="info-header invert">
+      <div class="note-category">
+        <span>Note Category</span>
+      </div>
+      <div class="active">
+        <span>Active</span>
+      </div>
+      <div class="archived">
+        <span>Archived</span>
+      </div>
+    </div>
+
+    <div id="info-container">
+    </div>
+
+    <div id="popup" style="display:none">
+      <div class="popup-content">
+        <img id="cancel" src="./icon/cancel.png" alt="X">
+
+        <div class="header invert">
+          <div class="name-header">
+            <span>Name</span>
+          </div>
+          <div class="created">
+            <span>Created</span>
+          </div>
+          <div class="category">
+            <span>Category</span>
+          </div>
+          <div class="content">
+            <span>Content</span>
+          </div>
+          <div class="dates">
+            <span>Dates</span>
+          </div>
+          <div class="icon-header-blok">
+          </div>
+        </div>
+
+        <div id="tasks-popup">
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </body>
 
 </html>
